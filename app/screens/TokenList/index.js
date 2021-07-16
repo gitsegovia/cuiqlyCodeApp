@@ -5,19 +5,26 @@ import {BaseStyle, useTheme, Images, BaseColor} from '@config';
 import styles from './styles';
 
 const data = [
-  {name: 'Jose', token: '123456'},
-  {name: 'Maria', token: '123456'},
-  {name: 'Pedro', token: '123456'},
-  {name: 'Moises', token: '123456'},
-  {name: 'Abraham', token: '123456'},
+  {name: 'Jose', token: '123456', used: 'Recarga', date: '02-02-2021'},
+  {name: 'Maria', token: '123456', used: 'Recarga', date: '02-02-2021'},
+  {name: 'Pedro', token: '123456', used: 'Recarga', date: '02-02-2021'},
+  {name: 'Moises', token: '123456', used: 'Recarga', date: '02-02-2021'},
+  {name: 'Abraham', token: '123456', used: 'Recarga', date: '02-02-2021'},
 ];
 
-const RenderItem = data => {
-  console.error(data);
+const RenderItem = ({item}) => {
+  console.error(item);
+  const data = item.item;
   return (
-    <View style={styles.item}>
+    <View style={{width: '100%', marginBottom: 10, flexDirection: 'row', justifyContent: 'space-between'}}>
+      <View>
+      <Text>{`Token: ${data.token}`}</Text>
       <Text>{data.name}</Text>
-      <Text>{data.token}</Text>
+      </View>
+      <View>
+      <Text>{data.used}</Text>
+      <Text>{data.date}</Text>
+      </View>
     </View>
   );
 };
@@ -53,7 +60,7 @@ function TokenList({navigation}) {
       />
       <FlatList
         style={{flex: 1}}
-        data={[]}
+        data={data}
         renderItem={item => <RenderItem item={item} />}
         keyExtractor={(_, index) => index}
         ListEmptyComponent={<RenderEmptyList />}

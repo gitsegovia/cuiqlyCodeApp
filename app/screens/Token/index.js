@@ -145,7 +145,12 @@ export default function Token({navigation, route}) {
             <View style={BaseStyle.slide}>
               <Image
                 source={Images.logo}
-                style={BaseStyle.logo}
+                style={{
+                  width: '60%',
+                  margin: 'auto',
+                  maxHeight: 200,
+                  minHeight: 80,
+                }}
                 resizeMode="contain"
               />
             </View>
@@ -154,10 +159,10 @@ export default function Token({navigation, route}) {
 
         <Section stretch>
           <Block>
-            <View style={{width: '10%', height: 0, marginTop: '20%'}}></View>
+            <View style={{width: '10%', height: 0, marginTop: '60%'}}></View>
             <Text
-              headline
-              semibold
+              title1
+              regular
               style={{
                 paddingVertical: 5,
                 paddingHorizontal: 20,
@@ -167,12 +172,29 @@ export default function Token({navigation, route}) {
             </Text>
             <View
               style={{
-                width: '60%',
+                width: '70%',
                 justifyContent: 'space-around',
                 alignItems: 'center',
                 flexDirection: 'row',
                 marginTop: 10,
-                marginHorizontal: '20%',
+                marginHorizontal: '15%',
+                borderRadius: 10,
+                paddingTop: 10,
+                paddingBottom: 10,
+                paddingHorizontal: 10,
+                margin: 0,
+                backgroundColor: BaseColor.whiteColor,
+                ...Platform.select({
+                  ios: {
+                    shadowColor: 'black',
+                    shadowOffset: {width: 0, height: 5},
+                    shadowOpacity: 0.12,
+                    shadowRadius: 6,
+                  },
+                  default: {
+                    elevation: 4,
+                  },
+                }),
               }}>
               <Text header semibold style={{letterSpacing: 10}}>
                 {token !== '' ? token.substring(0, 3) : '---'}
