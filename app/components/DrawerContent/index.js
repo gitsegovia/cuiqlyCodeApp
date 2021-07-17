@@ -162,7 +162,7 @@ function DrawerContent(props) {
           activeOpacity={0.8}
           onPress={() => {
             props.navigation.toggleDrawer();
-            props.navigation.navigate('TokenList');
+            props.navigation.navigate('Pin');
           }}>
           <View style={styles.drawerItem}>
             <Image

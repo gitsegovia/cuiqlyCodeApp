@@ -1,6 +1,7 @@
 import React from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import DrawerContent from '@components/DrawerContent';
+import Pin from '@screens/Pin'
 import Token from '@screens/Token';
 import TokenList from '@screens/TokenList';
 import Header from '@components/Header';
@@ -40,6 +41,7 @@ export default function DrawerNavigator() {
           },
         }}
       />
+      <Drawer.Screen name='Pin' component={Pin} />
       <Drawer.Screen name="TokenList" component={TokenList} />
     </Drawer.Navigator>
   );

@@ -61,7 +61,6 @@ export default (state = initialState, action = {}) => {
           avatar: action.data.Client.photo,
         },
       };
-      console.error('LOGIN: ', newState);
       return newState;
     case actionTypes.LOGIN_INVITED:
       return {

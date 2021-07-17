@@ -1,33 +1,30 @@
-import React from 'react';
-import {View, FlatList} from 'react-native';
-import {SafeAreaView, Text, Header, Icon} from '@components';
+import React, {useState, useEffect, useCallback} from 'react';
+import {
+  View,
+  FlatList,
+  TouchableOpacity,
+  Modal,
+  Platform,
+  ActivityIndicator,
+} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import {
+  SafeAreaView,
+  Text,
+  Header,
+  Icon,
+  TextInput,
+  MessageModal,
+  TokenDetail,
+} from '@components';
 import {BaseStyle, useTheme, Images, BaseColor} from '@config';
+import {useApolloClient} from '@apollo/client';
+import {USER, getGraphQlError} from '@gqlApollo';
+import {useTranslation} from 'react-i18next';
+import RenderHeaderFlatlist from './header';
+import moment from 'moment';
 import styles from './styles';
-
-const data = [
-  {name: 'Jose', token: '123456', used: 'Recarga', date: '02-02-2021'},
-  {name: 'Maria', token: '123456', used: 'Recarga', date: '02-02-2021'},
-  {name: 'Pedro', token: '123456', used: 'Recarga', date: '02-02-2021'},
-  {name: 'Moises', token: '123456', used: 'Recarga', date: '02-02-2021'},
-  {name: 'Abraham', token: '123456', used: 'Recarga', date: '02-02-2021'},
-];
-
-const RenderItem = ({item}) => {
-  console.error(item);
-  const data = item.item;
-  return (
-    <View style={{width: '100%', marginBottom: 10, flexDirection: 'row', justifyContent: 'space-between'}}>
-      <View>
-      <Text>{`Token: ${data.token}`}</Text>
-      <Text>{data.name}</Text>
-      </View>
-      <View>
-      <Text>{data.used}</Text>
-      <Text>{data.date}</Text>
-      </View>
-    </View>
-  );
-};
 
 const RenderEmptyList = () => {
   return (
@@ -38,7 +35,113 @@ const RenderEmptyList = () => {
 };
 
 function TokenList({navigation}) {
+  const LIMIT_SQL = 10;
+  const [data, setData] = useState([]);
+  const [loadingFooter, setLoadingFooter] = useState(false);
   const {colors} = useTheme();
+  const {t} = useTranslation();
+  const [isModal, setIsModal] = useState(false);
+  const [message, setMessage] = useState('');
+  const [finish, setFinish] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const {query} = useApolloClient();
+  const [params, setParams] = useState({
+    params: {search: ''},
+    options: {limit: LIMIT_SQL, offset: 0},
+  });
+
+  const [typeMessage, setTypeMessage] = useState('success');
+  const showMessage = (
+    message = '',
+    type = 'success',
+    onFinish = () => {},
+    timeout = 2000,
+  ) => {
+    setTypeMessage(type);
+    setMessage(message);
+    setIsModal(true);
+    setTimeout(() => {
+      setIsModal(false);
+      onFinish();
+    }, timeout);
+  };
+
+  const fetchTokenUsedList = async () => {
+    if (loading === true) return;
+    console.error('ENVIANDO', params);
+
+    try {
+      const {errors, data: dataApi} = await query({
+        query: USER.QUERY.listTokenUsed,
+        variables: {input: params},
+        fetchPolicy: 'no-cache',
+      });
+
+      if (errors && errors.length > 0) {
+        console.error('errors: ', errors);
+        showMessage('connection_error_try_later', 'error');
+      }
+      if (dataApi) {
+        console.error(
+          'LLEGO',
+          dataApi.listTokenUsed.length,
+          dataApi.listTokenUsed,
+        );
+        if (data.listTokenUsed.length > 0) {
+          //     if (data.length === 0) {
+          setData(dataApi.listTokenUsed);
+          //     } else {
+          //       setData(values => [...values, ...data.listTokenUsed]);
+          //     }
+          //     setFinish(false);
+        } else {
+          console.error('FINAL');
+          //     setFinish(true);
+        }
+        //   setLoadingFooter(false);
+        //   setLoading(false);
+      }
+    } catch (err) {
+      console.error(err);
+      showMessage(getGraphQlError(err).messages, 'error', () => {}, 1500);
+    }
+
+    setTimeout(() => {
+      setLoading(false);
+    }, 5000);
+  };
+
+  const onEndFetch = () => {
+    if (finish === true) return false;
+    setFinish(true);
+    setLoadingFooter(true);
+    setParams(value => ({
+      ...value,
+      options: {
+        limit: LIMIT_SQL,
+        offset: LIMIT_SQL * (value.options.offset / LIMIT_SQL + 1),
+      },
+    }));
+  };
+
+  const onSearch = search => {
+    setData([]);
+    setParams(value => ({...value, params: search}));
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchTokenUsedList();
+
+      return () => {
+        setData([]);
+        setParams({
+          params: {search: ''},
+          options: {limit: LIMIT_SQL, offset: 0},
+        });
+      };
+    }, [params]),
+  );
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
@@ -55,15 +158,33 @@ function TokenList({navigation}) {
           );
         }}
         onPressLeft={() => {
-          navigation.goBack();
+          navigation.navigate('Token');
         }}
       />
+      <MessageModal
+        modalVisible={isModal}
+        message={message}
+        type={typeMessage}
+      />
+      <View style={{paddingHorizontal: 20, marginBottom: 25}}>
+        <RenderHeaderFlatlist onSearch={onSearch} />
+      </View>
       <FlatList
-        style={{flex: 1}}
+        contentContainerStyle={{paddingHorizontal: 20}}
         data={data}
-        renderItem={item => <RenderItem item={item} />}
+        renderItem={({item}) => <TokenDetail item={item} />}
+        ListFooterComponent={() => {
+          return loadingFooter === true ? (
+            <View>
+              <ActivityIndicator size="large" color={BaseColor.scarlet} />
+            </View>
+          ) : null;
+        }}
         keyExtractor={(_, index) => index}
         ListEmptyComponent={<RenderEmptyList />}
+        numColumns={2}
+        // onEndReached={onEndFetch}
+        // onEndReachedThreshold={0.9}
       />
     </SafeAreaView>
   );

@@ -5,6 +5,8 @@
   "login_info": "Accede a nuestro sistema de seguridad",
   "security_token": "Token de seguridad",
   "used_token": "Token usados",
+  "since": "desde",
+  "until": "hasta",
   "and": "y",
   "about_us": "Sobre nosotros",
   "about_cuiqly": "Sobre CuiQly",
@@ -596,5 +598,7 @@
   "location_permission_tutorial": "Comparte tu ubicación para mostrarte todos las ofertas cerca de tí.",
   "no_connect_title": "Ups! Algo no salió bien.",
   "no_connect_info": "Revisa tu conexión a internet e intenta nuevamente.",
-  "coupon_deleted": "Cupón borrado."
+  "coupon_deleted": "Cupón borrado.",
+  "validate_security_pin": "Validar pin",
+  "security_pin": "Pin de seguridad"
 }

@@ -53,10 +53,6 @@ const Index = forwardRef((props, ref) => {
     onChangeText && onChangeText(value);
   };
 
-  useEffect(() => {
-    console.error('COLOR', colors.primaryColor);
-  }, [colors]);
-
   return (
     <>
       <View
