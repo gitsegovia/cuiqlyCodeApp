@@ -142,9 +142,13 @@ const RenderHeaderFlatlist = ({onSearch}) => {
         <TouchableOpacity
           style={{paddingVertical: 10}}
           onPress={() => {
-            setOptionView(value => !value);
+            if(optionView){
+              setOptionView(false)
+            }else{
+              setOptionView(true)
+            }
           }}>
-          <Text>{t('Más opciones')}</Text>
+          <Text semibold>{t(optionView ? 'hidden_filter' : 'filter')}</Text>
         </TouchableOpacity>
       </View>
       {optionView && (

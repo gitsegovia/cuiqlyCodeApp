@@ -31,13 +31,16 @@ export default function TokenDetail(props) {
         </View>
         <View
           style={{
-            flexDirection: 'row',
+            flexDirection: 'column',
             justifyContent: 'flex-start',
-            alignItems: 'flex-start',
+            alignItems: 'center',
             height: 45,
           }}>
           <Text callout light textAlign="justify" numberOfLines={2}>
             {`${item.Employee.firstName} ${item.Employee.lastName}`}
+          </Text>
+          <Text callout light textAlign="justify" numberOfLines={2}>
+            {`${item.Employee.position}`}
           </Text>
         </View>
         <View

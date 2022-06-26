@@ -30,6 +30,7 @@
     "react-native-fast-image": "^8.3.6",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-modal": "^12.0.2",
+    "react-native-progress": "^5.0.0",
     "react-native-reanimated": "^2.2.0",
     "react-native-responsive-layout": "^1.2.0",
     "react-native-responsive-screen": "^1.4.2",

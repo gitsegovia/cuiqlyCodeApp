@@ -87,7 +87,7 @@ function TokenList({navigation}) {
           dataApi.listTokenUsed.length,
           dataApi.listTokenUsed,
         );
-        if (data.listTokenUsed.length > 0) {
+        if (dataApi.listTokenUsed.length > 0) {
           //     if (data.length === 0) {
           setData(dataApi.listTokenUsed);
           //     } else {

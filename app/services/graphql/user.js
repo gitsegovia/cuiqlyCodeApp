@@ -17,6 +17,7 @@ const USER = {
           Employee {
             firstName
             lastName
+            position
           }
         }
       }
@@ -35,7 +36,18 @@ const USER = {
         }
       }
     `,
-  },
+    createTokenSecurity: gql`
+      mutation  createTokenSecurity($input: RegisterTokenInput!){
+        createTokenSecurity(input: $input){
+          id
+          codeActivation
+          status
+          typeUse
+          createdAt
+        }
+      }
+    `,
+  }
 };
 
 export default USER;
