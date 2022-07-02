@@ -42,5 +42,26 @@ export default StyleSheet.create({
       },
     }),
   },
-  button: {paddingVertical: 10, borderWidth: 0.5, borderColor: BaseColor.grayColor, width: '25%', justifyContent: 'center', alignItems: 'center', borderRadius: 8}
+  button: {
+    paddingVertical: 10,
+    borderWidth: 0.5,
+    borderColor: BaseColor.grayColor,
+    width: '25%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    ...Platform.select({
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: {width: 0, height: 5},
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      default: {
+        elevation: 4,
+      },
+    }),
+    
+  },
 });

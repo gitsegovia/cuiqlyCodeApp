@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   View,
   FlatList,
@@ -62,14 +62,20 @@ function TokenList({navigation}) {
     }, timeout);
   };
 
+  const headerRef = useRef();
+
   const fetchTokenUsedList = async () => {
     if (loading === true) return;
-    console.error('ENVIANDO', params);
+    const input = {
+      params: headerRef.current.getInfoParams(),
+      options: params.options
+    }
+    console.error('ENVIANDO', input);
 
     try {
       const {errors, data: dataApi} = await query({
         query: USER.QUERYS.listTokenUsed,
-        variables: {input: params},
+        variables: {input: input},
         fetchPolicy: 'no-cache',
       });
       setLoading(false);
@@ -159,7 +165,7 @@ function TokenList({navigation}) {
           }}>
           <Block>
             <View style={{paddingHorizontal: 20, marginBottom: 15}}>
-              <RenderHeaderFlatlist setParams={setParams} />
+              <RenderHeaderFlatlist ref={headerRef} />
             </View>
           </Block>
         </Section>

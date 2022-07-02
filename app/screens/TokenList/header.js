@@ -1,41 +1,230 @@
-import React, {useState} from 'react';
-import {View, FlatList, TouchableOpacity, Modal, Platform} from 'react-native';
+import React, {useState, useEffect, forwardRef} from 'react';
+import {View, TouchableOpacity, Modal, Platform} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {SafeAreaView, Text, Header, Icon, TextInput} from 'components';
-import {BaseStyle, useTheme, Images, BaseColor} from 'config';
 import {useTranslation} from 'react-i18next';
+import {useSelector} from 'react-redux';
 import moment from 'moment';
+import {Text, Icon, TextInput,SelectInput} from 'components';
+import {useTheme, BaseStyle} from 'config';
 import styles from './styles';
 
-const RenderHeaderFlatlist = ({setParams}) => {
+const RenderHeaderFlatlist = forwardRef((props, ref) => {
   const {colors} = useTheme();
+  const refresh = useSelector(state => state.tokenList.refresh);
   const {t} = useTranslation();
   const [search, setSearch] = useState('');
-  const [show, setShow] = useState(false);
-  const [mode, setMode] = useState('');
+
   const [date, setDate] = useState(new Date(moment()));
-  const [modalVisible, setModalVisible] = useState(false);
-  const [optionView, setOptionView] = useState(false);
 
-  const onChangeDateIOS = selectedDate => {
-    const currentDate = selectedDate || date;
-    setDate(currentDate);
+  const [modalSinceVisible, setModalSinceVisible] = useState(false);
+  const [since, setSince] = useState('');
+  const [modalUntilVisible, setModalUntilVisible] = useState(false);
+  const [until, setUntil] = useState('');
+  const [modalTypeVisible, setModalTypeVisible] = useState(false);
+  const [type, setType] = useState('');
+
+  useEffect(() => {
+    setSince('');
+    setUntil('');
+    setType('');
+    setSearch('')
+
+    return () => {};
+  }, [refresh]);
+
+  React.useImperativeHandle(ref, () => {
+    return {
+      getInfoParams: () => {
+        return { search, since: moment(since).format('YYYY-MM-DD'), until: moment(until).format('YYYY-MM-DD'), type}
+      },
+    };
+  });
+
+  const DatepickerSinceModal = () => {
+    const [localDate, setLocalDate] = useState(new Date());
+    const onClose = () => setModalSinceVisible(false);
+
+    const onChangeDate = (event, selectedDate) => {
+      if (event.type !== 'dismissed') {
+        setSince(selectedDate);
+      }
+      onClose();
+    };
+
+    if (Platform.OS === 'ios') {
+      return (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={true}
+          onRequestClose={onClose}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: '#0008',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}>
+            <View style={{width: '100%', backgroundColor: 'white'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 15,
+                }}>
+                <TouchableOpacity
+                  onPress={onClose}
+                  style={{paddingHorizontal: 15, paddingVertical: 15}}>
+                  <Text body1 semibold>
+                    {t('cancel')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    onClose();
+                    setSince(localDate);
+                    setUntil('');
+                  }}
+                  style={{paddingHorizontal: 15, paddingVertical: 15}}>
+                  <Text body1 semibold>
+                    {t('done')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={localDate}
+                mode={'date'}
+                is24Hour={true}
+                display="spinner"
+                //textColor='#fff'
+                themeVariant="light"
+                maximumDate={new Date(moment().format('YYYY-MM-DD'))}
+                onChange={(event, selectedDate) => setLocalDate(selectedDate)}
+              />
+            </View>
+          </View>
+        </Modal>
+      );
+    }
+
+    return (
+      <DateTimePicker
+        testID="dateTimePicker"
+        value={localDate}
+        mode={'date'}
+        is24Hour={true}
+        display="spinner"
+        //textColor='#fff'
+        themeVariant="light"
+        maximumDate={new Date(moment().format('YYYY-MM-DD'))}
+        onChange={onChangeDate}
+      />
+    );
   };
 
-  const onChangeDate = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(false);
-    setDate(currentDate);
+  const DatepickerUntilModal = () => {
+    const [localDate, setLocalDate] = useState(new Date());
+    const onClose = () => setModalUntilVisible(false);
+
+    const onChangeDate = (event, selectedDate) => {
+      if (event.type !== 'dismissed') {
+        setUntil(selectedDate);
+      }
+      onClose();
+    };
+
+    if (Platform.OS === 'ios') {
+      return (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={true}
+          onRequestClose={onClose}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: '#0008',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+            }}>
+            <View style={{width: '100%', backgroundColor: 'white'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 15,
+                }}>
+                <TouchableOpacity
+                  onPress={onClose}
+                  style={{paddingHorizontal: 15, paddingVertical: 15}}>
+                  <Text body1 semibold>
+                    {t('cancel')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    onClose();
+                    setUntil(localDate);
+                  }}
+                  style={{paddingHorizontal: 15, paddingVertical: 15}}>
+                  <Text body1 semibold>
+                    {t('done')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <DateTimePicker
+                testID="dateTimePicker"
+                value={localDate}
+                mode={'date'}
+                is24Hour={true}
+                display="spinner"
+                //textColor='#fff'
+                themeVariant="light"
+                minimumDate={
+                  since === ''
+                    ? new Date('1920-01-01')
+                    : new Date(moment(since).format('YYYY-MM-DD'))
+                }
+                onChange={(event, selectedDate) => setLocalDate(selectedDate)}
+              />
+            </View>
+          </View>
+        </Modal>
+      );
+    }
+
+    return (
+      <DateTimePicker
+        testID="dateTimePicker"
+        value={localDate}
+        mode={'date'}
+        is24Hour={true}
+        display="spinner"
+        themeVariant="light"
+        minimumDate={
+          since === ''
+            ? new Date('1920-01-01')
+            : new Date(moment(since).format('YYYY-MM-DD'))
+        }
+        onChange={onChangeDate}
+      />
+    );
   };
 
-  const DatepickerModal = ({visible, onClose, onChange}) => {
-    const [localDate, setLocalDate] = useState(new Date(date));
+  const SelectTypeModal = () => {
+    const onClose = () => setModalTypeVisible(false);
+    const [typeOperation, setTypeOperation] = useState('')
+    const listTypeOperation = [
+      {label: 'Editar', value: 'Edit'},
+      {label: 'Recargar', value: 'Recharge'},
+    ];
 
     return (
       <Modal
         animationType="slide"
         transparent={true}
-        visible={visible}
+        visible={true}
         onRequestClose={onClose}>
         <View
           style={{
@@ -45,41 +234,40 @@ const RenderHeaderFlatlist = ({setParams}) => {
             alignItems: 'center',
           }}>
           <View style={{width: '100%', backgroundColor: 'white'}}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingHorizontal: 15,
-              }}>
-              <TouchableOpacity
-                onPress={onClose}
-                style={{paddingHorizontal: 15, paddingVertical: 15}}>
-                <Text body1 semibold>
-                  {t('cancel')}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  onClose();
-                  onChange(localDate);
-                }}
-                style={{paddingHorizontal: 15, paddingVertical: 15}}>
-                <Text body1 semibold>
-                  {t('done')}
-                </Text>
-              </TouchableOpacity>
+            <View style={[BaseStyle.inputTitle]}>
+              <Text subhead semibold>
+                {t('type_operation')}
+              </Text>
             </View>
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={localDate}
-              mode={'date'}
-              is24Hour={true}
-              display="spinner"
-              //textColor='#fff'
-              themeVariant="light"
-              // minimumDate={new Date('1920-01-01')}
-              onChange={(event, selectedDate) => setLocalDate(selectedDate)}
+            <SelectInput
+              listSelect={listTypeOperation}
+              onChange={setTypeOperation}
+              value={typeOperation}
             />
+            <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  paddingHorizontal: 15,
+                }}>
+                <TouchableOpacity
+                  onPress={onClose}
+                  style={{paddingHorizontal: 15, paddingVertical: 15}}>
+                  <Text body1 semibold>
+                    {t('cancel')}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    onClose();
+                    setType(typeOperation);
+                  }}
+                  style={{paddingHorizontal: 15, paddingVertical: 15}}>
+                  <Text body1 semibold>
+                    {t('done')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
           </View>
         </View>
       </Modal>
@@ -87,7 +275,13 @@ const RenderHeaderFlatlist = ({setParams}) => {
   };
 
   return (
-    <View style={{width: '88%', marginLeft: '6%', flexDirection: 'column', marginTop: 15}}>
+    <View
+      style={{
+        width: '88%',
+        marginLeft: '6%',
+        flexDirection: 'column',
+        marginTop: 15,
+      }}>
       <TextInput
         iconStart={
           <View
@@ -105,7 +299,7 @@ const RenderHeaderFlatlist = ({setParams}) => {
             />
           </View>
         }
-        style={[styles.inputSearch, {borderWidth: 0.5}]}        
+        style={[styles.inputSearch, {borderWidth: 0.5}]}
         styleInput={{marginLeft: 10}}
         onChangeText={value => setSearch(value)}
         placeholder={t('search')}
@@ -120,169 +314,39 @@ const RenderHeaderFlatlist = ({setParams}) => {
           justifyContent: 'space-between',
           alignItems: 'center',
           flexDirection: 'row',
-          marginTop:15
+          marginTop: 15,
         }}>
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            if(optionView){
-              setOptionView(false)
-            }else{
-              setOptionView(true)
-            }
+            setModalSinceVisible(true);
           }}>
-          <Text semibold>{t('Desde')}</Text>
+          <Text caption1 semibold grayColor={since === '' ? true : false}>
+            {since === '' ? t('since') : moment(since).format('DD-MM-YYYY')}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
           onPress={() => {
-            if(optionView){
-              setOptionView(false)
-            }else{
-              setOptionView(true)
-            }
+            setModalUntilVisible(true);
           }}>
-          <Text semibold>{t('Hasta')}</Text>
+          <Text caption1 semibold grayColor={until === '' ? true : false}>
+            {until === '' ? t('until') : moment(until).format('DD-MM-YYYY')}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => {
-            if(optionView){
-              setOptionView(false)
-            }else{
-              setOptionView(true)
-            }
-          }}>
-          <Text semibold>{t('Acción')}</Text>
+          onPress={() => setModalTypeVisible(true)}>
+          <Text semibold grayColor={type === '' ? true : false}>
+            {t('action')}
+          </Text>
         </TouchableOpacity>
       </View>
-      {optionView && (
-        <View style={BaseStyle.rowFlexStart}>
-          <View style={BaseStyle.columnFormLeft}>
-            <View style={[BaseStyle.contentTitle]}>
-              <Text
-                textAlign="center"
-                body2
-                style={{width: '100%', color: BaseColor.tarawera}}>
-                {t('since')}
-              </Text>
-              <View
-                style={[
-                  {
-                    minWidth: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginTop: 13.3,
-                    //backgroundColor: 'teal',
-                    borderBottomWidth: 0.8,
-                    borderColor: '#bdbdbd',
-                  },
-                ]}>
-                <Text
-                  onPress={
-                    Platform.OS === 'ios'
-                      ? () => {
-                          setModalVisible(true);
-                        }
-                      : () => {
-                          setShow(true);
-                          setMode('date');
-                        }
-                  }
-                  textAlign="left"
-                  body2
-                  style={{
-                    width: '100%',
-                    color: BaseColor.tarawera,
-                  }}>
-                  {moment(date).format('DD-MM-YYYY')}
-                </Text>
-              </View>
-              {show && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode={'date'}
-                  is24Hour={true}
-                  display="spinner"
-                  minimumDate={new Date(moment().subtract(100, 'year'))}
-                  maximumDate={new Date(moment().subtract(18, 'year'))}
-                  onChange={onChangeDate}
-                />
-              )}
-            </View>
-            <DatepickerModal
-              visible={modalVisible}
-              onClose={() => setModalVisible(false)}
-              date={date}
-              onChange={onChangeDateIOS}
-            />
-          </View>
-
-          <View style={BaseStyle.columnFormRight}>
-            <View style={[BaseStyle.contentTitle]}>
-              <Text
-                textAlign="left"
-                body2
-                style={{width: '100%', color: BaseColor.tarawera}}>
-                {t('until')}
-              </Text>
-              <View
-                style={[
-                  {
-                    minWidth: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginTop: 13.3,
-                    //backgroundColor: 'teal',
-                    borderBottomWidth: 0.8,
-                    borderColor: '#bdbdbd',
-                  },
-                ]}>
-                <Text
-                  onPress={
-                    Platform.OS === 'ios'
-                      ? () => {
-                          setModalVisible(true);
-                        }
-                      : () => {
-                          setShow(true);
-                          setMode('date');
-                        }
-                  }
-                  textAlign="left"
-                  body2
-                  style={{
-                    width: '100%',
-                    color: BaseColor.tarawera,
-                  }}>
-                  {moment(date).format('DD-MM-YYYY')}
-                </Text>
-              </View>
-              {show && (
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  value={date}
-                  mode={'date'}
-                  is24Hour={true}
-                  display="spinner"
-                  minimumDate={new Date(moment().subtract(100, 'year'))}
-                  maximumDate={new Date(moment().subtract(18, 'year'))}
-                  onChange={onChangeDate}
-                />
-              )}
-            </View>
-            <DatepickerModal
-              visible={modalVisible}
-              onClose={() => setModalVisible(false)}
-              date={date}
-              onChange={onChangeDateIOS}
-            />
-          </View>
-        </View>
-      )}
+      {modalSinceVisible && <DatepickerSinceModal />}
+      {modalUntilVisible && <DatepickerUntilModal />}
+      {modalTypeVisible && <SelectTypeModal />}
     </View>
   );
-};
+});
 
 export default RenderHeaderFlatlist;

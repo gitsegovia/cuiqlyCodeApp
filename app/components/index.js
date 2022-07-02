@@ -5,6 +5,7 @@ import MessageModal from './MessageModal';
 import Text from './Text';
 import TextInput from './TextInput';
 import TokenDetail from './TokenDetail';
+import SelectInput from './SelectInput';
 import {SafeAreaView} from 'react-native';
 
 export {
@@ -15,5 +16,6 @@ export {
   TextInput,
   MessageModal,
   TokenDetail,
+  SelectInput,
   SafeAreaView,
 };
