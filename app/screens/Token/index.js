@@ -1,37 +1,37 @@
-import React, {useState, useRef, useEffect} from 'react';
-import {View, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
-import moment from 'moment';
-import {BaseStyle, useTheme, Images, BaseColor} from '@config';
+import React, {useState, useRef, useEffect,useCallback} from 'react';
+import {useFocusEffect} from '@react-navigation/native';
+import {
+  View,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import moment from 'moment-timezone';
+import {BaseStyle, useTheme,} from 'config';
 import {
   SafeAreaView,
-  Icon,
-  TextInput,
   Text,
-  Button,
-  Image,
   MessageModal,
-  Header,
-} from '@components';
+} from 'components';
 import styles from './styles';
 import {useTranslation} from 'react-i18next';
 import {useApolloClient} from '@apollo/client';
-import {USER, getGraphQlError} from '@gqlApollo';
-import useInterval from '@utils/useInterval';
-import {useSelector} from 'react-redux';
+import {USER, USERDEVICE, getGraphQlError} from 'gqlApollo';
+import { useDispatch,useSelector} from 'react-redux';
 import {Grid, Block, Section} from 'react-native-responsive-layout';
-import {getStatusBarHeight} from 'react-native-status-bar-height';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {dateMesCorto} from 'utils'
+import {useSocket} from 'services/websocket'
+import {AuthActions} from 'actions'
+
+import LinearGradient from 'react-native-linear-gradient';
 
 const TimerLink = '20';
 
 function CounterTag({callback}) {
   let counter = TimerLink;
   const [timeSeconds, setTimeSeconds] = useState(TimerLink);
-  const {t} = useTranslation();
-  const [activeLink, setActiveLink] = useState(false);
 
   const timer = useRef();
 
@@ -57,8 +57,8 @@ function CounterTag({callback}) {
 
   return (
     <React.Fragment>
-      <Text body1 primaryColor>
-        {`${t('token_valid_for')} ${timeSeconds}s`}
+      <Text title3>
+        {`00:${timeSeconds}`}
       </Text>
     </React.Fragment>
   );
@@ -69,6 +69,34 @@ export default function Token({navigation, route}) {
   const {t} = useTranslation();
   const {mutate} = useApolloClient();
   const login = useSelector(state => state.auth.login);
+  const appInfo = useSelector(state => state.appInfo);
+  const dispatch = useDispatch();
+
+  //WEBSOCKET
+  const socketConnect = useSocket();
+
+  useFocusEffect(
+    useCallback(() => {
+      if (socketConnect) {
+        console.log('SOCKETIO: chat --useSocket', socketConnect);
+        socketConnect.on('tokenUsed', (tokenUsed) => {
+          console.log('VALOR DE TOKEN ACTUAL:',token)
+          if(tokenUsed===token){
+            setIsViewCounter(false);                          
+            setLoading(false);
+            setToken('');
+          }
+        });
+      }
+  
+      return () => {
+        if (socketConnect) {
+          socketConnect.off('tokenUsed');
+        }
+      };
+    }, [socketConnect]),
+  );
+  //WEBSOCKET END
 
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState('');
@@ -93,7 +121,19 @@ export default function Token({navigation, route}) {
   };
 
   /**
-   * call when action reset pass
+   * call when action logout
+   */
+  const onLogout = async () => {
+    dispatch(AuthActions.onLogout())
+    await mutate({
+      mutation: USERDEVICE.MUTATIONS.deleteTokenUserDevice,
+      variables: {input: {tokenDevice: appInfo.tokenDevice}},
+      fetchPolicy: 'no-cache',
+    });   
+  }
+
+  /**
+   * call when action generate token
    */
   const onGenerateToken = async () => {
     if (loading) return;
@@ -113,6 +153,7 @@ export default function Token({navigation, route}) {
       if (errors && errors.length > 0) {
         console.log('errors: ', errors);
         showMessage('connection_error_try_later', 'error');
+        setLoading(false);
       }
       if (data) {
         showMessage('new_code_generate', 'success');
@@ -120,14 +161,13 @@ export default function Token({navigation, route}) {
         setIsViewCounter(true);
       }
     } catch (err) {
+      setLoading(false);
       showMessage(getGraphQlError(err).messages, 'error', () => {}, 1500);
     }
-    setLoading(false);
   };
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
-      <Header title={''} />
       <MessageModal
         modalVisible={isModal}
         message={message}
@@ -135,109 +175,110 @@ export default function Token({navigation, route}) {
       />
       <Grid
         stretchable
-        scrollable
         style={{
           paddingHorizontal: 20,
-          minHeight: hp('100%') - 60 - getStatusBarHeight(),
         }}>
-        <Section>
+        <Section
+          stretch
+          style={{
+            flexDirection: 'column',
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
           <Block>
-            <View style={BaseStyle.slide}>
-              <Image
-                source={Images.logo}
-                style={{
-                  width: '60%',
-                  margin: 'auto',
-                  maxHeight: 200,
-                  minHeight: 80,
-                }}
-                resizeMode="contain"
-              />
-            </View>
-          </Block>
-        </Section>
-
-        <Section stretch>
-          <Block>
-            <View style={{width: '10%', height: 0, marginTop: '60%'}}></View>
             <Text
-              title1
-              regular
+              headline
+              semibold
               style={{
                 paddingVertical: 5,
                 paddingHorizontal: 20,
               }}
               textAlign="center">
-              {t('security_token')}
+              {`${dateMesCorto(moment())}`}
             </Text>
-            <View
-              style={{
-                width: '70%',
-                justifyContent: 'space-around',
-                alignItems: 'center',
-                flexDirection: 'row',
-                marginTop: 10,
-                marginHorizontal: '15%',
-                borderRadius: 10,
-                paddingTop: 10,
-                paddingBottom: 10,
-                paddingHorizontal: 10,
-                margin: 0,
-                backgroundColor: BaseColor.whiteColor,
-                ...Platform.select({
-                  ios: {
-                    shadowColor: 'black',
-                    shadowOffset: {width: 0, height: 5},
-                    shadowOpacity: 0.12,
-                    shadowRadius: 6,
-                  },
-                  default: {
-                    elevation: 4,
-                  },
-                }),
-              }}>
-              <Text header semibold style={{letterSpacing: 10}}>
-                {token !== '' ? token.substring(0, 3) : '---'}
-              </Text>
-              <Text header semibold style={{letterSpacing: 10}}>
-                {token !== '' ? token.substring(3) : '---'}
-              </Text>
-            </View>
-            <View
-              style={{
-                paddingTop: 15,
-                paddingHorizontal: 60,
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'center',
-              }}>
-              {isViewCounter && (
-                <CounterTag
-                  callback={() => {
-                    setIsViewCounter(false);
-                    setToken('');
-                  }}
-                />
-              )}
-            </View>
           </Block>
-        </Section>
-
-        <Section>
           <Block>
             <View
               style={{
-                width: '100%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginBottom: '10%',
+                marginTop: hp('6%'),
               }}>
-              <Button
-                style={{marginTop: 10, width: '80%'}}
-                loading={loading}
+              {token !== '' ? (
+                <LinearGradient
+                  start={{x: 0, y: 0.5}}
+                  end={{x: 1, y: 0}}
+                  locations={[0.2, 0.6]}
+                  colors={['#ff0207', '#ff2a7e']}
+                  style={styles.gradient}>
+                  <View style={styles.gradientContent}>
+                    <Text title1 bold>{t('token')}</Text>
+                    <Text bold style={{fontSize: wp('12%'), letterSpacing: 6}} >
+                      {`${token.substring(0, 3)} ${token.substring(3)}`}
+                    </Text>
+                    {isViewCounter && (
+                      <CounterTag
+                        callback={() => {
+                          setIsViewCounter(false);                          
+                          setLoading(false);
+                          setToken('');
+                        }}
+                      />
+                    )}
+                  </View>
+                </LinearGradient>
+              ) : (
+                <TouchableWithoutFeedback
                 onPress={onGenerateToken}>
-                {t('generate_token')}
-              </Button>
+                <View style={styles.gradientOff}>
+                  <View style={styles.gradientContent}>
+                    <Text
+                      title1
+                      bold
+                      style={{
+                        paddingVertical: 5,
+                        paddingHorizontal: 20,
+                      }}
+                      textAlign="center">
+                      {t('generate_token')}
+                    </Text>
+                  </View>
+                </View>
+                </TouchableWithoutFeedback>
+              )}
+            </View>
+          </Block>
+          <Block>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginBottom: hp('6%'),
+              }}>
+              <TouchableWithoutFeedback
+                onPress={onLogout}>
+                <View
+                  style={{
+                    width: wp('20%'),
+                    height: wp('20%'),
+                    borderRadius: wp('20%') / 2,
+                    backgroundColor: '#ff130b',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <View
+                    style={{
+                      width: wp('11%'),
+                      height: wp('11%'),
+                      borderRadius: wp('11%') / 2,
+                      backgroundColor: '#ff3463',
+                      borderColor: '#FFF',
+                      borderWidth: wp('2.5%'),
+                    }}
+                  />
+                </View>
+              </TouchableWithoutFeedback>
             </View>
           </Block>
         </Section>

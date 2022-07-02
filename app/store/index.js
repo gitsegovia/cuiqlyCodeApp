@@ -12,6 +12,10 @@ const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
   timeout: 100000,
+  blacklist: [
+    'checkLogo',
+    'tokenList'
+  ],
 };
 
 let middleware = [thunk];

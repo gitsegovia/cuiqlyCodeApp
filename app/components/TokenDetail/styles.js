@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, I18nManager} from 'react-native';
-import {BaseStyle, BaseColor} from '@config';
+import {BaseStyle, BaseColor} from 'config';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -13,33 +13,18 @@ export default StyleSheet.create({
     backgroundColor: '#FF00',
   },
   showShadow: {
-    width: wp('50%') - 30,
-    marginHorizontal: 15 / 2,
-    marginTop: 15 / 2,
-    marginBottom: 15,
+    marginHorizontal: 5,
+    marginTop: 5,
+    marginBottom: 5,
     flex: 0.5,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: {
-          width: 0,
-          height: 2,
-        },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-      },
-      default: {
-        elevation: 4,
-      },
-    }),
-
-    borderRadius: 12,
   },
   contentShadow: {
     backgroundColor: 'white',
-    paddingHorizontal: 8,
+    paddingHorizontal: 0,
     paddingBottom: 8,
     borderRadius: 12,
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    flexDirection: 'row'
   },
 });

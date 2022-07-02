@@ -5,18 +5,18 @@ import {
   createStackNavigator,
   CardStyleInterpolators,
 } from '@react-navigation/stack';
-import Icon from '@components/Icon'
-import {useTheme, BaseSetting} from '@config';
 import i18n from 'i18next';
 import {initReactI18next} from 'react-i18next';
 import {useSelector, connect} from 'react-redux';
 
-import Login from '@screens/Login';
-import Drawer from 'app/navigation/drawer';
+import {useTheme, BaseSetting} from 'config';
+import ContentScreen from './content';
+// import ContentScreen from 'screens/TokenList/tokenList';
+import LoginScreen from 'screens/Login';
+import LoadingScreen from 'screens/Loading';
+import LoadingTwoScreen from 'screens/Loading/loadingTwo';
 
 const RootStack = createStackNavigator();
-
-
 
 function Navigator({login}) {
   const storeLanguage = useSelector(state => state.application.language);
@@ -28,15 +28,15 @@ function Navigator({login}) {
 
   i18n.use(initReactI18next).init({
     resources: BaseSetting.resourcesLanguage,
-    lng: storeLanguage ?? BaseSetting.defaultLanguage,
-    fallbackLng: BaseSetting.defaultLanguage,
-    initImmediate: false,
+      lng: BaseSetting.defaultLanguage,
+      fallbackLng: BaseSetting.defaultLanguage,
+      compatibilityJSON: 'v3',
   });
 
   useEffect(() => {
     //TODO aqui esta lo que necesito para cambiar el estilo de la barra superior
     StatusBar.setBackgroundColor('#fff0', true);
-    //StatusBar.setTranslucent(true);
+    StatusBar.setTranslucent(true);
     //TODO activar esto
     // StatusBar.setBarStyle(
     //   colorScheme == 'light' ? 'light-content' : 'dark-content',
@@ -45,11 +45,33 @@ function Navigator({login}) {
     StatusBar.setBarStyle('light-content', true);
   }, []);
 
+  /**
+   * when reducer language change
+   */
+  useEffect(() => {
+    i18n.changeLanguage(storeLanguage);
+  }, [storeLanguage]);
+
   return (
     <NavigationContainer theme={theme}>
-      <RootStack.Navigator headerMode='none' initialRouteName={login.success === true ? 'Drawer' : 'Login'}>
-        <RootStack.Screen name="Login" component={Login} options={options} />
-        <RootStack.Screen name="Drawer" component={Drawer} options={options} />
+      <RootStack.Navigator 
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName="Loading"
+      >
+        <RootStack.Screen
+          name="Loading"
+          component={LoadingScreen}
+          options={{gestureEnabled: false}}
+        />
+        <RootStack.Screen
+          name="LoadingTwo"
+          component={LoadingTwoScreen}
+          options={{gestureEnabled: false}}
+        />
+        <RootStack.Screen name="Login" component={LoginScreen} options={options} />
+        <RootStack.Screen name="Main" component={ContentScreen} options={options} />
       </RootStack.Navigator>
     </NavigationContainer>
   );

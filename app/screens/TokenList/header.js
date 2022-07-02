@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import {View, FlatList, TouchableOpacity, Modal, Platform} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {SafeAreaView, Text, Header, Icon, TextInput} from '@components';
-import {BaseStyle, useTheme, Images, BaseColor} from '@config';
+import {SafeAreaView, Text, Header, Icon, TextInput} from 'components';
+import {BaseStyle, useTheme, Images, BaseColor} from 'config';
 import {useTranslation} from 'react-i18next';
 import moment from 'moment';
 import styles from './styles';
 
-const RenderHeaderFlatlist = ({onSearch}) => {
+const RenderHeaderFlatlist = ({setParams}) => {
   const {colors} = useTheme();
   const {t} = useTranslation();
   const [search, setSearch] = useState('');
@@ -87,7 +87,7 @@ const RenderHeaderFlatlist = ({onSearch}) => {
   };
 
   return (
-    <View style={{width: '100%', flexDirection: 'column'}}>
+    <View style={{width: '88%', marginLeft: '6%', flexDirection: 'column', marginTop: 15}}>
       <TextInput
         iconStart={
           <View
@@ -105,46 +105,55 @@ const RenderHeaderFlatlist = ({onSearch}) => {
             />
           </View>
         }
-        style={[styles.inputSearch, {borderWidth: 0.5}]}
-        icon={
-          <TouchableOpacity
-            style={{
-              marginRight: 10,
-              height: 30,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-            onPress={() => {
-              setSearch('');
-            }}>
-            <Icon
-              name={'times'}
-              size={20}
-              color={colors.border}
-              enableRTL={true}
-            />
-          </TouchableOpacity>
-        }
+        style={[styles.inputSearch, {borderWidth: 0.5}]}        
         styleInput={{marginLeft: 10}}
         onChangeText={value => setSearch(value)}
         placeholder={t('search')}
         value={search}
         returnKeyType="search"
         //onSubmitEditing={() => console.log('enter')}
-        onBlur={() => onSearch({search: search})}
+        onBlur={() => setParams({search: search})}
       />
       <View
         style={{
           width: '100%',
-          justifyContent: 'center',
-          alignItems: 'flex-end',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexDirection: 'row',
+          marginTop:15
         }}>
         <TouchableOpacity
-          style={{paddingVertical: 10}}
+          style={styles.button}
           onPress={() => {
-            setOptionView(value => !value);
+            if(optionView){
+              setOptionView(false)
+            }else{
+              setOptionView(true)
+            }
           }}>
-          <Text>{t('Más opciones')}</Text>
+          <Text semibold>{t('Desde')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            if(optionView){
+              setOptionView(false)
+            }else{
+              setOptionView(true)
+            }
+          }}>
+          <Text semibold>{t('Hasta')}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            if(optionView){
+              setOptionView(false)
+            }else{
+              setOptionView(true)
+            }
+          }}>
+          <Text semibold>{t('Acción')}</Text>
         </TouchableOpacity>
       </View>
       {optionView && (

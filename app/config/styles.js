@@ -1,6 +1,8 @@
 import {StyleSheet, Platform} from 'react-native';
-import * as Utils from '@utils';
 import {BaseColor} from './theme';
+import {
+  widthPercentageToDP as wp
+} from 'react-native-responsive-screen';
 
 /**
  * Common basic style defines
@@ -18,16 +20,26 @@ export const BaseStyle = StyleSheet.create({
     marginBottom: 15,
   },
   textInputSquare: {
-    width: 40,
-    height: 40,
+    width: wp('13'),
+    height: wp('16'),
     borderRadius: 10,
-    paddingBottom: 0,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexDirection: 'row',
-    borderColor: '#707070',
-    borderWidth: 0.8,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    fontSize: wp('8%'),
+    backgroundColor: '#FFF',
+    borderWidth: 0,
     marginRight: 5,
+    ...Platform.select({
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: {width: 0, height: 5},
+        shadowOpacity: 0.12,
+        shadowRadius: 6,
+      },
+      default: {
+        elevation: 4,
+      },
+    }),
   },
   safeAreaView: {
     flex: 1,
@@ -94,40 +106,6 @@ export const BaseStyle = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 15,
-  },
-  /* TODO style checkbox */
-  termsBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    paddingLeft: 10,
-  },
-  termsBoxFull: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    marginTop: 15,
-    marginBottom: 5,
-  },
-  inputCheckBox: {
-    width: 22,
-    height: 22,
-    borderRadius: 4,
-    borderColor: BaseColor.wineBerry,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  checkCustonFalse: {
-    width: 8,
-    height: 8,
-    borderRadius: 8,
-  },
-  checkCustonTrue: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: BaseColor.scarlet,
   },
   inputAndroid: {
     fontSize: 15,

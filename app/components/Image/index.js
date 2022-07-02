@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import PropTypes from "prop-types";
 import FastImage from "react-native-fast-image";
-import {Images} from "@config"
+import {Images} from "config"
 
 export default function Image(props) {
   const [loadingImg, setLoadingImg] = useState(true);

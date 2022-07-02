@@ -1,8 +1,8 @@
 import React from 'react';
 import Modal from 'react-native-modal';
 import {View} from 'react-native';
-import {BaseColor, useTheme} from '@config';
-import Text from '@components/Text';
+import {BaseColor, useTheme} from 'config';
+import Text from '../Text';
 import {useTranslation} from 'react-i18next';
 import styles from './styles';
 

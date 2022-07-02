@@ -1,5 +1,5 @@
 import {StyleSheet, Platform} from 'react-native';
-import {BaseColor} from '@config';
+import {BaseColor} from 'config';
 
 export default StyleSheet.create({
   container: {
@@ -42,4 +42,5 @@ export default StyleSheet.create({
       },
     }),
   },
+  button: {paddingVertical: 10, borderWidth: 0.5, borderColor: BaseColor.grayColor, width: '25%', justifyContent: 'center', alignItems: 'center', borderRadius: 8}
 });

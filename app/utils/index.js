@@ -212,44 +212,44 @@ export const dateMesCorto = date => {
   let mes = '';
   switch (moment(date).format('MM')) {
     case '01':
-      mes = 'ENE';
+      mes = 'Ene';
       break;
     case '02':
-      mes = 'FEB';
+      mes = 'Feb';
       break;
     case '03':
-      mes = 'MAR';
+      mes = 'Mar';
       break;
     case '04':
-      mes = 'ABR';
+      mes = 'Abr';
       break;
     case '05':
-      mes = 'MAY';
+      mes = 'May';
       break;
     case '06':
-      mes = 'JUN';
+      mes = 'Jun';
       break;
     case '07':
-      mes = 'JUL';
+      mes = 'Jul';
       break;
     case '08':
-      mes = 'AGO';
+      mes = 'Ago';
       break;
     case '09':
-      mes = 'SEP';
+      mes = 'Sep';
       break;
     case '10':
-      mes = 'OCT';
+      mes = 'Oct';
       break;
     case '11':
-      mes = 'NOV';
+      mes = 'Nov';
       break;
     case '12':
-      mes = 'DIC';
+      mes = 'Dic';
       break;
   }
 
-  return `${moment(date).format('DD')} ${mes.toLowerCase()} ${moment(
+  return `${mes} ${moment(date).format('DD')}, ${moment(
     date,
   ).format('YYYY')}`;
 };

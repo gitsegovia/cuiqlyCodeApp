@@ -1,7 +1,7 @@
 import React, {forwardRef, useState, useEffect} from 'react';
 import {TextInput, View, I18nManager} from 'react-native';
 import PropTypes from 'prop-types';
-import {BaseStyle, BaseColor, useTheme} from '@config';
+import {BaseStyle, BaseColor, useTheme} from 'config';
 import Text from '../Text';
 import {useTranslation} from 'react-i18next';
 

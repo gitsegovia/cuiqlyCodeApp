@@ -19,7 +19,6 @@ import {
 } from './theme';
 
 export {
-  BaseColor,
   Typography,
   FontWeight,
   FontLetterSpacing,
@@ -29,9 +28,10 @@ export {
   BaseSetting,
   Images,
   BaseStyle,
+  BaseColor,
   useTheme,
   useFont,
   FontSupport,
-  DefaultFont,
   ThemeSupport,
+  DefaultFont,
 };
