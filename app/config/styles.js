@@ -21,25 +21,14 @@ export const BaseStyle = StyleSheet.create({
   },
   textInputSquare: {
     width: wp('13'),
-    height: wp('16'),
-    borderRadius: 10,
+    height: wp('15'),
+    borderRadius: 8,
     textAlign: 'center',
     textAlignVertical: 'center',
-    fontSize: wp('8%'),
+    fontSize: wp('7%'),
     backgroundColor: '#FFF',
-    borderWidth: 0,
-    marginRight: 5,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: {width: 0, height: 5},
-        shadowOpacity: 0.12,
-        shadowRadius: 6,
-      },
-      default: {
-        elevation: 4,
-      },
-    }),
+    borderWidth: 0.5,
+    
   },
   safeAreaView: {
     flex: 1,

@@ -35,14 +35,12 @@ function Navigator({login}) {
 
   useEffect(() => {
     //TODO aqui esta lo que necesito para cambiar el estilo de la barra superior
-    StatusBar.setBackgroundColor('#fff0', true);
-    StatusBar.setTranslucent(true);
     //TODO activar esto
     // StatusBar.setBarStyle(
     //   colorScheme == 'light' ? 'light-content' : 'dark-content',
     //   true,
     // );
-    StatusBar.setBarStyle('light-content', true);
+    StatusBar.setBarStyle('dark-content', true);
   }, []);
 
   /**

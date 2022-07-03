@@ -41,14 +41,14 @@ export default function TokenDetail(props) {
             alignItems: 'flex-end',
             minHeight: 37,
           }}>
-            <Text body1 bold style={{letterSpacing: 3, marginRight: 5}}>
+            <Text body1 bold style={{letterSpacing: 3}}>
             {`${item.codeActivation.substring(0, 3)} ${item.codeActivation.substring(3)}`}
           </Text>
           <Text
             body1
             medium
             textAlign="justify"
-            style={{color: BaseColor.grayColor}}>
+            style={{color: BaseColor.grayColor, marginRight: 3}}>
             {item.typeUse.substring(0, 8)}
           </Text>
         </View>

@@ -1,29 +1,22 @@
-import React, {useState, useRef, useEffect,useCallback} from 'react';
+import React, {useState, useRef, useEffect, useCallback} from 'react';
 import {useFocusEffect} from '@react-navigation/native';
-import {
-  View,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import {View, TouchableWithoutFeedback} from 'react-native';
 import moment from 'moment-timezone';
-import {BaseStyle, useTheme,} from 'config';
-import {
-  SafeAreaView,
-  Text,
-  MessageModal,
-} from 'components';
+import {BaseStyle, useTheme} from 'config';
+import {SafeAreaView, Text, MessageModal} from 'components';
 import styles from './styles';
 import {useTranslation} from 'react-i18next';
 import {useApolloClient} from '@apollo/client';
 import {USER, USERDEVICE, getGraphQlError} from 'gqlApollo';
-import { useDispatch,useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {Grid, Block, Section} from 'react-native-responsive-layout';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {dateMesCorto} from 'utils'
-import {useSocket} from 'services/websocket'
-import {AuthActions} from 'actions'
+import {dateMesCorto} from 'utils';
+import {useSocket} from 'services/websocket';
+import {AuthActions} from 'actions';
 
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -57,9 +50,7 @@ function CounterTag({callback}) {
 
   return (
     <React.Fragment>
-      <Text title3>
-        {`00:${timeSeconds}`}
-      </Text>
+      <Text headline style={{marginTop: 3}}>{`00:${timeSeconds}`}</Text>
     </React.Fragment>
   );
 }
@@ -79,16 +70,16 @@ export default function Token({navigation, route}) {
     useCallback(() => {
       if (socketConnect) {
         console.log('SOCKETIO: chat --useSocket', socketConnect);
-        socketConnect.on('tokenUsed', (tokenUsed) => {
-          console.log('VALOR DE TOKEN ACTUAL:',token)
-          if(tokenUsed===token){
-            setIsViewCounter(false);                          
+        socketConnect.on('tokenUsed', tokenUsed => {
+          console.log('VALOR DE TOKEN ACTUAL:', token);
+          if (tokenUsed === token) {
+            setIsViewCounter(false);
             setLoading(false);
             setToken('');
           }
         });
       }
-  
+
       return () => {
         if (socketConnect) {
           socketConnect.off('tokenUsed');
@@ -124,13 +115,13 @@ export default function Token({navigation, route}) {
    * call when action logout
    */
   const onLogout = async () => {
-    dispatch(AuthActions.onLogout())
+    dispatch(AuthActions.onLogout());
     await mutate({
       mutation: USERDEVICE.MUTATIONS.deleteTokenUserDevice,
       variables: {input: {tokenDevice: appInfo.tokenDevice}},
       fetchPolicy: 'no-cache',
-    });   
-  }
+    });
+  };
 
   /**
    * call when action generate token
@@ -168,11 +159,6 @@ export default function Token({navigation, route}) {
 
   return (
     <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
-      <MessageModal
-        modalVisible={isModal}
-        message={message}
-        type={typeMessage}
-      />
       <Grid
         stretchable
         style={{
@@ -188,8 +174,8 @@ export default function Token({navigation, route}) {
           }}>
           <Block>
             <Text
-              headline
-              semibold
+              body1
+              regular
               style={{
                 paddingVertical: 5,
                 paddingHorizontal: 20,
@@ -203,21 +189,26 @@ export default function Token({navigation, route}) {
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginTop: hp('6%'),
+                marginBottom: hp('2%'),
               }}>
               {token !== '' ? (
-                <LinearGradient
-                  start={{x: 0, y: 0.5}}
-                  end={{x: 1, y: 0}}
-                  locations={[0.2, 0.6]}
-                  colors={['#ff0207', '#ff2a7e']}
-                  style={styles.gradient}>
-                  <View style={styles.gradientContent}>
-                    <Text title1 bold>{t('token')}</Text>
-                    <Text bold style={{fontSize: wp('12%'), letterSpacing: 6}} >
-                      {`${token.substring(0, 3)} ${token.substring(3)}`}
-                    </Text>
-                    {isViewCounter && (
+                <View style={styles.shadowGraddient}>
+                  <LinearGradient
+                    start={{x: 0, y: 0.5}}
+                    end={{x: 1, y: 0}}
+                    locations={[0.2, 0.6]}
+                    colors={['#ff0207', '#ff2a7e']}
+                    style={styles.gradient}>
+                    <View style={styles.gradientContent}>
+                      <Text title2 bold>
+                        {t('token')}
+                      </Text>
+                      <Text
+                        bold
+                        style={{fontSize: wp('10%'), letterSpacing: 6}}>
+                        {`${token.substring(0, 3)} ${token.substring(3)}`}
+                      </Text>
+                      {isViewCounter && (
                       <CounterTag
                         callback={() => {
                           setIsViewCounter(false);                          
@@ -225,27 +216,29 @@ export default function Token({navigation, route}) {
                           setToken('');
                         }}
                       />
-                    )}
-                  </View>
-                </LinearGradient>
-              ) : (
-                <TouchableWithoutFeedback
-                onPress={onGenerateToken}>
-                <View style={styles.gradientOff}>
-                  <View style={styles.gradientContent}>
-                    <Text
-                      title1
-                      bold
-                      style={{
-                        paddingVertical: 5,
-                        paddingHorizontal: 20,
-                      }}
-                      textAlign="center">
-                      {t('generate_token')}
-                    </Text>
-                  </View>
+                      )}
+                    </View>
+                  </LinearGradient>
                 </View>
+              ) : (
+                <View style={styles.shadowGraddientOff}>
+                <TouchableWithoutFeedback onPress={onGenerateToken}>
+                  <View style={styles.gradientOff}>
+                    <View style={styles.gradientContent}>
+                      <Text
+                        title1
+                        bold
+                        style={{
+                          paddingVertical: 5,
+                          paddingHorizontal: 20,
+                        }}
+                        textAlign="center">
+                        {t('generate_token')}
+                      </Text>
+                    </View>
+                  </View>
                 </TouchableWithoutFeedback>
+                </View>
               )}
             </View>
           </Block>
@@ -254,10 +247,9 @@ export default function Token({navigation, route}) {
               style={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                marginBottom: hp('6%'),
+                marginBottom: hp('4%'),
               }}>
-              <TouchableWithoutFeedback
-                onPress={onLogout}>
+              <TouchableWithoutFeedback onPress={onLogout}>
                 <View
                   style={{
                     width: wp('20%'),
@@ -272,7 +264,7 @@ export default function Token({navigation, route}) {
                       width: wp('11%'),
                       height: wp('11%'),
                       borderRadius: wp('11%') / 2,
-                      backgroundColor: '#ff3463',
+                      backgroundColor: '#ff130b',
                       borderColor: '#FFF',
                       borderWidth: wp('2.5%'),
                     }}

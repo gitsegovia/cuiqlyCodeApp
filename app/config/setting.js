@@ -80,7 +80,7 @@ export const BaseSetting = {
     },
   },
   //LOCAL
-  urlApi: 'http://192.168.1.254:5000/',
+  // urlApi: 'http://192.168.1.254:5000/',
   // urlApiBackend: 'http://192.168.1.101:3001/',
   // urlPage: 'http://192.168.1.101:3100/',
   // urlAssetsPage: 'http://192.168.1.101:3100/assets/',
@@ -88,10 +88,10 @@ export const BaseSetting = {
   // urlImgsFlag: 'http://192.168.1.101:3100/imgs/flags/',
   // urlImgsChat: 'http://192.168.1.101:3100/app/chats/',
   // urlAvatar: 'http://192.168.1.101:3100/app/avatar/',
-  urlSocketCuiQly: "http://192.168.1.254:3400",
+  // urlSocketCuiQly: "http://192.168.1.254:3400",
 
   //DEVELOP
-  // urlApi: 'https://devgraph.cuiqly.com/',
+  urlApi: 'https://devgraph.cuiqly.com/',
   urlPage: 'https://dashboard.cuiqly.com/',
   urlApiBackend: 'http://devapibackend.cuiqly.com/',
   urlAssetsPage: 'https://dashboard.cuiqly.com/assets/',
@@ -99,7 +99,7 @@ export const BaseSetting = {
   urlImgsFlag: 'https://dashboard.cuiqly.com/imgs/flags/',
   urlImgsChat: 'https://dashboard.cuiqly.com/app/chats/',
   urlAvatar: 'https://dashboard.cuiqly.com/app/avatar/',
-  // urlSocketCuiQly: "https://devchat.cuiqly.com/",
+  urlSocketCuiQly: "https://devchat.cuiqly.com/",
 
   //PRODUCTION
   // urlApi: 'https://graph.cuiqly.com/',

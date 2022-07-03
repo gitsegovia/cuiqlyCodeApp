@@ -8,7 +8,7 @@ import {
 export default StyleSheet.create({
   tabbar: {
     marginTop: 2,
-    height: 38,
+    height: 50,
     backgroundColor: Platform.OS==='android' ? '#d5eaef' : '#d5eaef',
     borderWidth: 0,
     borderRadius: 24,
@@ -23,7 +23,7 @@ export default StyleSheet.create({
   },
   indicatorStyle: {
     marginTop: 0,
-    height: 38,
+    height: 50,
     backgroundColor: '#cddbdc',
     borderRadius: 24,
   },

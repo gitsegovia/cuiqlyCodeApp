@@ -4,7 +4,11 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 import moment from 'moment';
-import {Text, Icon, TextInput,SelectInput} from 'components';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {Text, Icon, TextInput, SelectInput} from 'components';
 import {useTheme, BaseStyle} from 'config';
 import styles from './styles';
 
@@ -24,18 +28,34 @@ const RenderHeaderFlatlist = forwardRef((props, ref) => {
   const [type, setType] = useState('');
 
   useEffect(() => {
-    setSince('');
-    setUntil('');
-    setType('');
-    setSearch('')
+    onClearAll();
 
     return () => {};
   }, [refresh]);
 
+  const onClearAll = () => {
+    setSince('');
+    setUntil('');
+    setType('');
+    setSearch('');
+  };
+
   React.useImperativeHandle(ref, () => {
     return {
       getInfoParams: () => {
-        return { search, since: moment(since).format('YYYY-MM-DD'), until: moment(until).format('YYYY-MM-DD'), type}
+        const input = {
+          search,
+          type,
+        };
+        if (since !== '') {
+          input.since = moment(since).format('YYYY-MM-DD');
+        }
+
+        if (until !== '') {
+          input.until = moment(until).format('YYYY-MM-DD');
+        }
+
+        return input;
       },
     };
   });
@@ -214,7 +234,7 @@ const RenderHeaderFlatlist = forwardRef((props, ref) => {
 
   const SelectTypeModal = () => {
     const onClose = () => setModalTypeVisible(false);
-    const [typeOperation, setTypeOperation] = useState('')
+    const [typeOperation, setTypeOperation] = useState('');
     const listTypeOperation = [
       {label: 'Editar', value: 'Edit'},
       {label: 'Recargar', value: 'Recharge'},
@@ -233,7 +253,7 @@ const RenderHeaderFlatlist = forwardRef((props, ref) => {
             justifyContent: 'flex-end',
             alignItems: 'center',
           }}>
-          <View style={{width: '100%', backgroundColor: 'white'}}>
+          <View style={{width: '100%', backgroundColor: 'white', paddingHorizontal: '5%', paddingBottom: '4%'}}>
             <View style={[BaseStyle.inputTitle]}>
               <Text subhead semibold>
                 {t('type_operation')}
@@ -245,29 +265,29 @@ const RenderHeaderFlatlist = forwardRef((props, ref) => {
               value={typeOperation}
             />
             <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  paddingHorizontal: 15,
-                }}>
-                <TouchableOpacity
-                  onPress={onClose}
-                  style={{paddingHorizontal: 15, paddingVertical: 15}}>
-                  <Text body1 semibold>
-                    {t('cancel')}
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    onClose();
-                    setType(typeOperation);
-                  }}
-                  style={{paddingHorizontal: 15, paddingVertical: 15}}>
-                  <Text body1 semibold>
-                    {t('done')}
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingHorizontal: 15,
+              }}>
+              <TouchableOpacity
+                onPress={onClose}
+                style={{paddingHorizontal: 15, paddingVertical: 15}}>
+                <Text body1 semibold>
+                  {t('cancel')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  onClose();
+                  setType(typeOperation);
+                }}
+                style={{paddingHorizontal: 15, paddingVertical: 15}}>
+                <Text body1 semibold>
+                  {t('done')}
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>
@@ -277,13 +297,40 @@ const RenderHeaderFlatlist = forwardRef((props, ref) => {
   return (
     <View
       style={{
-        width: '88%',
-        marginLeft: '6%',
+        width: '100%',
         flexDirection: 'column',
         marginTop: 15,
       }}>
-      <TextInput
-        iconStart={
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <TextInput
+          iconStart={
+            <View
+              style={{
+                marginLeft: 10,
+                height: 30,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
+              <Icon
+                name={'search'}
+                size={20}
+                color={colors.border}
+                enableRTL={true}
+              />
+            </View>
+          }
+          style={[styles.inputSearch, {borderWidth: 0.5}]}
+          styleInput={{marginLeft: 10}}
+          onChangeText={value => setSearch(value)}
+          placeholder={t('search')}
+          value={search}
+        />
+        <TouchableOpacity onPress={onClearAll}>
           <View
             style={{
               marginLeft: 10,
@@ -292,22 +339,14 @@ const RenderHeaderFlatlist = forwardRef((props, ref) => {
               justifyContent: 'center',
             }}>
             <Icon
-              name={'search'}
+              name={'trash'}
               size={20}
               color={colors.border}
               enableRTL={true}
             />
           </View>
-        }
-        style={[styles.inputSearch, {borderWidth: 0.5}]}
-        styleInput={{marginLeft: 10}}
-        onChangeText={value => setSearch(value)}
-        placeholder={t('search')}
-        value={search}
-        returnKeyType="search"
-        //onSubmitEditing={() => console.log('enter')}
-        onBlur={() => setParams({search: search})}
-      />
+        </TouchableOpacity>
+      </View>
       <View
         style={{
           width: '100%',
@@ -321,7 +360,11 @@ const RenderHeaderFlatlist = forwardRef((props, ref) => {
           onPress={() => {
             setModalSinceVisible(true);
           }}>
-          <Text caption1 semibold grayColor={since === '' ? true : false}>
+          <Text
+            caption1
+            semibold
+            grayColor={since === '' ? true : false}
+            style={{paddingHorizontal: 5}}>
             {since === '' ? t('since') : moment(since).format('DD-MM-YYYY')}
           </Text>
         </TouchableOpacity>

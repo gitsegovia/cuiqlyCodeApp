@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {LogBox, View, StyleSheet, Animated, Easing, AppState, Text} from 'react-native';
+import {LogBox, View, StyleSheet, Animated, Easing, AppState, StatusBar} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {ApolloProvider} from '@apollo/client';
 import {store, persistor} from 'app/store';
@@ -20,6 +20,7 @@ export default function App() {
 
   useEffect(() => {
     SplashScreen.hide();
+    StatusBar.setBarStyle('dark-content');
   }, []);
 
   let closeApp = '';

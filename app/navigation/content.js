@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import {TabView, TabBar} from 'react-native-tab-view';
 import {useTranslation} from 'react-i18next';
 import {
@@ -10,11 +10,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import {TokenListActions} from 'actions'
 import * as Utils from 'utils';
+import {Text} from 'components'
 import styles from './styles';
 import TokenScreen from 'screens/Token'
 import TokenListScreen from 'screens/TokenList'
 
-const PADDING = wp('15%');
+const PADDING = wp('19%');
 
 export default function Content(props) {
   const {navigation} = props;
@@ -45,8 +46,9 @@ export default function Content(props) {
 
   const renderTabBar = (props) => {
     const tabWidth = Utils.getWidthDevice() - PADDING * 2 - 7;
+    const tabLeft = (Utils.getWidthDevice() - tabWidth) /2;
     return (
-      <TouchableOpacity activeOpacity={0} style={[{width: tabWidth, marginLeft: '14%'}]}>
+      <TouchableOpacity activeOpacity={0} style={[{width: tabWidth, marginLeft: tabLeft, marginBottom: 10}]}>
         <TabBar
           {...props}
           style={[styles.tabbar,{elevation: 0}]}
@@ -95,11 +97,12 @@ export default function Content(props) {
             );
           }}
           renderLabel={({route, focused, color}) => (
-            <View style={{height: 30}}>
+            <View style={{height: 20}}>
               <Text
-                callout
-                medium
-                style={{color: 'black', margin: 0, padding: 0}}>
+                body2
+                semibold
+                grayColor={focused ? false : true}
+                style={{margin: 0, padding: 0}}>
                 {route.title}
               </Text>
             </View>

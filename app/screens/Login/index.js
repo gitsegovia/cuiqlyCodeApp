@@ -1,9 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {AuthActions} from 'actions';
 import {
   View,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
@@ -13,12 +12,8 @@ import {
 import {BaseStyle, useTheme, Images, BaseColor} from 'config';
 import {
   SafeAreaView,
-  Icon,
-  Text,
-  Button,
   Image,
   MessageModal,
-  Header,
 } from 'components';
 import {Grid, Block, Section} from 'react-native-responsive-layout';
 import {getStatusBarHeight} from 'react-native-status-bar-height';
@@ -41,7 +36,7 @@ export default function Login({navigation, route}) {
   const {mutate} = useApolloClient();
   const dispatch = useDispatch();
   const offsetKeyboard = Platform.select({
-    ios: 20,
+    ios: 0,
     android: 20,
   });
 
@@ -67,6 +62,10 @@ export default function Login({navigation, route}) {
       onFinish();
     }, timeout);
   };
+
+  useEffect(() => {
+    return () => {};
+  });
 
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -136,142 +135,167 @@ export default function Login({navigation, route}) {
   };
 
   return (
-    <SafeAreaView style={BaseStyle.safeAreaView} forceInset={{top: 'always'}}>
+    <SafeAreaView
+      style={[BaseStyle.safeAreaView, {backgroundColor: '#ff130b'}]}
+      forceInset={{top: 'always'}}>
       <MessageModal
         modalVisible={isModal}
         message={message}
         type={typeMessage}
       />
-      <Grid
-        stretchable
-        style={{
-          paddingHorizontal: 20,
-          backgroundColor: '#ff130b',
-        }}>
-        {/* <KeyboardAvoidingView
+      <KeyboardAvoidingView
         behavior={Platform.OS === 'android' ? 'height' : 'padding'}
-        keyboardVerticalOffset={offsetKeyboard}></KeyboardAvoidingView> */}
-        <Section
-          stretch
-          style={{
-            flexDirection: 'column',
-            alignContent: 'center',
-            alignItems: 'center',
-            justifyContent: 'space-between',
+        keyboardVerticalOffset={offsetKeyboard}>
+        <ScrollView
+          scrollEnabled={false}
+          contentContainerStyle={{
+            minHeight: hp('100%') - getStatusBarHeight(),
           }}>
-          <Block>
-            <View style={BaseStyle.slide}>
-              <Image
-                source={Images.logo_blank}
-                style={{
-                  width: '60%',
-                  marginHorizontal: 'auto',
-                  maxHeight: 200,
-                  minHeight: 80,
-                  marginTop: hp('15%'),
-                }}
-                resizeMode="contain"
-              />
-            </View>
-          </Block>
-          <Block>
-            <View
+          <Grid stretchable style={{backgroundColor: '#ff130b'}}>
+            <Section
               style={{
-                width: '60%',
-                marginBottom: '20%',
-                marginHorizontal: '20%',
-                justifyContent: 'center',
+                width: '100%',
+                flexDirection: 'column',
+                alignContent: 'center',
                 alignItems: 'center',
+                justifyContent: 'space-between',
               }}>
-                <View style={{backgroundColor: '#FFF', height: 45, width: '100%', borderRadius: 8}}>
-              <TextInput
-                style={[
-                  {
-                    /*fontFamily: 'Raleway'*/
-                    flex: 1,
-                    height: 40,
-                    paddingTop: 0,
-                    paddingBottom: 13,
-                    paddingLeft: 10,
-                    margin: 0,
-                    textAlignVertical: 'bottom',
-                    backgroundColor: '#FFFF',
-                    width: '100%',
-                    borderRadius: 8
-                  },
-                ]}
-                onChangeText={text => setId(text)}
-                autoCorrect={false}
-                autoCapitalize="none"
-                placeholder={t('user')}
-                placeholderTextColor={BaseColor.grayColor}
-                value={id}
-              />
-              </View>
-              <View style={{backgroundColor: '#FFF', height: 45, width: '100%', borderRadius: 8, marginTop: 15}}>
-              <TextInput
-                style={[
-                  {
-                    /*fontFamily: 'Raleway'*/
-                    flex: 1,
-                    height: 40,
-                    paddingTop: 0,
-                    paddingBottom: 13,
-                    paddingLeft: 10,
-                    margin: 0,
-                    textAlignVertical: 'bottom',
-                    backgroundColor: '#FFFF',
-                    width: '100%',
-                    borderRadius: 8
-                  },
-                ]}
-                onChangeText={text => setPassword(text)}
-                autoCorrect={false}
-                secureTextEntry={true}
-                autoCapitalize="none"
-                placeholder={t('password')}
-                placeholderTextColor={BaseColor.grayColor}
-                value={password}
-              />
-              </View>
-            </View>
-          </Block>
-          <Block>
-            <View
+              <Block>
+                <View style={BaseStyle.slide}>
+                  <Image
+                    source={Images.logo_blank}
+                    style={{
+                      width: '60%',
+                      marginHorizontal: 'auto',
+                      maxHeight: 200,
+                      minHeight: 80,
+                      marginTop: hp('15%'),
+                    }}
+                    resizeMode="contain"
+                  />
+                </View>
+              </Block>
+            </Section>
+            <Section
+              stretch
               style={{
-                justifyContent: 'center',
+                flexDirection: 'column',
+                alignContent: 'center',
                 alignItems: 'center',
-                marginBottom: hp('6%'),
+                justifyContent: 'center',
               }}>
-              <TouchableWithoutFeedback
-                onPress={() => {
-                  onLogin();
-                }}>
+              <Block>
                 <View
                   style={{
-                    width: wp('20%'),
-                    height: wp('20%'),
-                    borderRadius: wp('20%') / 2,
-                    backgroundColor: '#ff130b',
-                    alignItems: 'center',
+                    width: '70%',
+                    marginBottom: '20%',
+                    marginHorizontal: '15%',
                     justifyContent: 'center',
+                    alignItems: 'center',
                   }}>
                   <View
                     style={{
-                      width: wp('19%'),
-                      height: wp('19%'),
-                      borderRadius: wp('19%') / 2,
-                      backgroundColor: '#ff3463',
-                      borderColor: '#FFF',
-                      borderWidth: wp('6%'),
-                    }}
-                  />
+                      backgroundColor: '#FFF',
+                      height: hp('6%'),
+                      width: '100%',
+                      borderRadius: 8,
+                    }}>
+                    <TextInput
+                      style={[
+                        {
+                          flex:1,
+                          paddingTop: 0,
+                          paddingBottom: 0,
+                          paddingLeft: 10,
+                          margin: 0,
+                          textAlignVertical: 'bottom',
+                          backgroundColor: '#FFF',
+                          width: '100%',
+                          borderRadius: 8,
+                        },
+                      ]}
+                      onChangeText={text => setId(text)}
+                      autoCorrect={false}
+                      autoCapitalize="none"
+                      placeholder={t('user')}
+                      placeholderTextColor={BaseColor.grayColor}
+                      value={id}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      backgroundColor: '#FFF',
+                      height: hp('6%'),
+                      width: '100%',
+                      borderRadius: 8,
+                      marginTop: 15,
+                    }}>
+                    <TextInput
+                      style={[
+                        {
+                          flex: 1,
+                          paddingTop: 0,
+                          paddingBottom: 0,
+                          paddingLeft: 10,
+                          margin: 0,
+                          textAlignVertical: 'bottom',
+                          backgroundColor: '#FFFF',
+                          width: '100%',
+                          borderRadius: 8,
+                        },
+                      ]}
+                      onChangeText={text => setPassword(text)}
+                      autoCorrect={false}
+                      secureTextEntry={true}
+                      autoCapitalize="none"
+                      placeholder={t('password')}
+                      placeholderTextColor={BaseColor.grayColor}
+                      value={password}
+                    />
+                  </View>
                 </View>
-              </TouchableWithoutFeedback>
-            </View>
-          </Block>
-        </Section>
-      </Grid>
+              </Block>
+            </Section>
+
+            <Section>
+              <Block>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: hp('8%'),
+                  }}>
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      onLogin();
+                    }}>
+                    <View
+                      style={{
+                        width: wp('20%'),
+                        height: wp('20%'),
+                        borderRadius: wp('20%') / 2,
+                        backgroundColor: '#ff130b',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}>
+                      <View
+                        style={{
+                          width: wp('19%'),
+                          height: wp('19%'),
+                          borderRadius: wp('19%') / 2,
+                          backgroundColor: '#ff130b',
+                          borderColor: '#FFF',
+                          borderWidth: wp('6%'),
+                        }}
+                      />
+                    </View>
+                  </TouchableWithoutFeedback>
+                </View>
+              </Block>
+            </Section>
+          </Grid>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
