@@ -13,7 +13,7 @@ import SocketProvider from 'services/websocket'
 import FetchApp from 'services/fetch';
 import Navigator from './navigation';
 
-LogBox.ignoreAllLogs(false);
+LogBox.ignoreAllLogs(true);
 
 export default function App() {
   const [refresh, setRefresh] = useState(false);

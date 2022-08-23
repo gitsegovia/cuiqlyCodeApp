@@ -94,6 +94,7 @@ const FetchApp = ({children, login, appInfo}) => {
           }
         }
       } catch (err) {
+        console.log('fetch error ', err)
         dispatch(AuthActions.onLogout())
         mutate({
           mutation: USERDEVICE.MUTATIONS.deleteTokenUserDevice,

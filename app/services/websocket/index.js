@@ -19,11 +19,9 @@ const SocketProvider = (props) => {
     if(login?.success == true){
       console.error('SOCKETIO: INICIAR SESION',login, BaseSetting.urlSocketCuiQly)
       const newSocket = io(
-        BaseSetting.urlSocketCuiQly,
+        `${BaseSetting.urlSocketCuiQly}safe`,
         {query: {id: login.userId }}
       )
-      console.error("SOCKETIO: id-", login.userId, socketConnect)
-      newSocket.emit('testConnectionDev');
       socketConnect.socket=newSocket;
       console.error('SOCKETIO: ref', socketConnect.socket)
     }else{
@@ -35,12 +33,11 @@ const SocketProvider = (props) => {
     }
   
     return () => {
-      /*if(socketConnect.socket) {
+      if(socketConnect.socket) {
         console.log('SOCKETIO: SESION CERRADA..')
-        socketConnect.socket.emit('disconnectChat')
         socketConnect.socket.close()
         socketConnect.socket=undefined;
-      }*/
+      }
     }
 	}, [login]);
   
