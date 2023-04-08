@@ -2,6 +2,9 @@
  * Basic Setting Variables Define
  */
 const dev = process.env.NODE_ENV === `development`;
+//LOCAL - PRODUCTION - DEVELOPMENT
+const nodeEnv = 'DEVELOPMENT';
+
 export const BaseSetting = {
   name: 'CuiQlyCode',
   displayName: 'CuiQly Code',
@@ -79,36 +82,16 @@ export const BaseSetting = {
       translation: require('../lang/km.json'),
     },
   },
-  //LOCAL
-  // urlApi: 'http://192.168.1.254:5000/',
-  // urlApiBackend: 'http://192.168.1.101:3001/',
-  // urlPage: 'http://192.168.1.101:3100/',
-  // urlAssetsPage: 'http://192.168.1.101:3100/assets/',
-  // urlImgsProduct: 'http://192.168.1.101:3100/imgs/products/',
-  // urlImgsFlag: 'http://192.168.1.101:3100/imgs/flags/',
-  // urlImgsChat: 'http://192.168.1.101:3100/app/chats/',
-  // urlAvatar: 'http://192.168.1.101:3100/app/avatar/',
-  // urlSocketCuiQly: "http://192.168.1.254:3400",
+  
+  //URL MANAGERS
+  urlApi: nodeEnv==='LOCAL' ? 'http://192.168.1.193:5000/' : nodeEnv==='PRODUCTION' ? 'https://genesys.cuiqly.com/' : 'https://demo.genesys.cuiqly.com/',
+  urlApiBackend: nodeEnv==='LOCAL' ? 'http://192.168.1.193:3001/' : nodeEnv==='PRODUCTION' ? 'http://filegenius.cuiqly.com/' : 'https://demo.filegenius.cuiqly.com/',
+  urlPage: nodeEnv==='LOCAL' ? 'http://192.168.1.193:3100/' : nodeEnv==='PRODUCTION' ? 'https://nexus.cuiqly.com/' : 'https://demo.nexus.cuiqly.com/',
+  urlAssetsPage: nodeEnv==='LOCAL' ? 'http://192.168.1.193:3100/assets/' : nodeEnv==='PRODUCTION' ? 'https://nexus.cuiqly.com/assets/' : 'https://demo.nexus.cuiqly.com/assets/',
+  urlImgsProduct: nodeEnv==='LOCAL' ? 'http://192.168.1.193:3100/imgs/products/' : nodeEnv==='PRODUCTION' ? 'https://nexus.cuiqly.com/imgs/products/' : 'https://demo.nexus.cuiqly.com/imgs/products/',
+  urlImgsFlag: nodeEnv==='LOCAL' ? 'http://192.168.1.193:3100/imgs/flags/' : nodeEnv==='PRODUCTION' ? 'https://nexus.cuiqly.com/imgs/flags/' : 'https://demo.nexus.cuiqly.com/imgs/flags/',
+  urlImgsChat: nodeEnv==='LOCAL' ? 'http://192.168.1.193:3100/app/chats/' : nodeEnv==='PRODUCTION' ? 'https://nexus.cuiqly.com/app/chats/' : 'https://demo.nexus.cuiqly.com/app/chats/',
+  urlAvatar: nodeEnv==='LOCAL' ? 'http://192.168.1.193:3100/app/avatar/' : nodeEnv==='PRODUCTION' ? 'https://nexus.cuiqly.com/app/avatar/' : 'https://demo.nexus.cuiqly.com/app/avatar/',
+  urlSocketCuiQly: nodeEnv==='LOCAL' ? "http://192.168.1.193:3400/" : nodeEnv==='PRODUCTION' ? "https://pulse.cuiqly.com/" : 'https://demo.pulse.cuiqly.com/',
 
-  //DEVELOP
-  urlApi: 'https://devgraph.cuiqly.com/',
-  urlPage: 'https://dashboard.cuiqly.com/',
-  urlApiBackend: 'http://devapibackend.cuiqly.com/',
-  urlAssetsPage: 'https://dashboard.cuiqly.com/assets/',
-  urlImgsProduct: 'https://dashboard.cuiqly.com/imgs/products/',
-  urlImgsFlag: 'https://dashboard.cuiqly.com/imgs/flags/',
-  urlImgsChat: 'https://dashboard.cuiqly.com/app/chats/',
-  urlAvatar: 'https://dashboard.cuiqly.com/app/avatar/',
-  urlSocketCuiQly: "https://devchat.cuiqly.com/",
-
-  //PRODUCTION
-  // urlApi: 'https://graph.cuiqly.com/',
-  // urlPage: 'https://control.cuiqly.com/',
-  // urlApiBackend: 'http://apibackend.cuiqly.com/',
-  // urlAssetsPage: 'https://control.cuiqly.com/assets/',
-  // urlImgsProduct: 'https://control.cuiqly.com/imgs/products/',
-  // urlImgsFlag: 'https://control.cuiqly.com/imgs/flags/',
-  // urlImgsChat: 'https://control.cuiqly.com/app/chats/',
-  // urlAvatar: 'https://control.cuiqly.com/app/avatar/',
-  // urlSocketCuiQly: "https://chat.cuiqly.com/",
 };
