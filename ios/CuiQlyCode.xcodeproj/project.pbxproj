@@ -524,7 +524,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6J6N5FNC9C;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = CuiQlyCode/Info.plist;
@@ -535,7 +535,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -555,7 +555,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6J6N5FNC9C;
 				INFOPLIST_FILE = CuiQlyCode/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "CuiQly Safe";
@@ -565,7 +565,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.0.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

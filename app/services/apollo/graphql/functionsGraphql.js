@@ -4,6 +4,7 @@ export const getGraphQlError = (error) => {
     messages: error
       .toString()
       .replace('Error: ', '')
-      .replace('GraphQL error: ', ''),
+      .replace('GraphQL error: ', '')
+      .replace('AuthenticatiomError: ', ''),
   };
 };

@@ -61,7 +61,7 @@ const RenderHeaderFlatlist = forwardRef((props, ref) => {
   });
 
   const DatepickerSinceModal = () => {
-    const [localDate, setLocalDate] = useState(new Date());
+    const [localDate, setLocalDate] = useState(moment().toDate());
     const onClose = () => setModalSinceVisible(false);
 
     const onChangeDate = (event, selectedDate) => {
@@ -119,7 +119,7 @@ const RenderHeaderFlatlist = forwardRef((props, ref) => {
                 display="spinner"
                 //textColor='#fff'
                 themeVariant="light"
-                maximumDate={new Date(moment().format('YYYY-MM-DD'))}
+                maximumDate={moment().toDate()}
                 onChange={(event, selectedDate) => setLocalDate(selectedDate)}
               />
             </View>
@@ -137,14 +137,14 @@ const RenderHeaderFlatlist = forwardRef((props, ref) => {
         display="spinner"
         //textColor='#fff'
         themeVariant="light"
-        maximumDate={new Date(moment().format('YYYY-MM-DD'))}
+        maximumDate={moment().toDate()}
         onChange={onChangeDate}
       />
     );
   };
 
   const DatepickerUntilModal = () => {
-    const [localDate, setLocalDate] = useState(new Date());
+    const [localDate, setLocalDate] = useState(moment().toDate());
     const onClose = () => setModalUntilVisible(false);
 
     const onChangeDate = (event, selectedDate) => {
@@ -204,7 +204,7 @@ const RenderHeaderFlatlist = forwardRef((props, ref) => {
                 minimumDate={
                   since === ''
                     ? new Date('1920-01-01')
-                    : new Date(moment(since).format('YYYY-MM-DD'))
+                    : moment(since).toDate()
                 }
                 onChange={(event, selectedDate) => setLocalDate(selectedDate)}
               />
@@ -225,7 +225,7 @@ const RenderHeaderFlatlist = forwardRef((props, ref) => {
         minimumDate={
           since === ''
             ? new Date('1920-01-01')
-            : new Date(moment(since).format('YYYY-MM-DD'))
+            : moment(since).toDate()
         }
         onChange={onChangeDate}
       />
